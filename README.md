@@ -1,9 +1,9 @@
 # LUỒNG XỬ LÝ MVC TRONG LARAVEL
 
--   Routing: Định tuyến
--   Controller: Trung tâm điều khiển xử lý
--   Model: Phụ trách làm việc với database
--   View: Thiết lập trang hiển thị cho người dùng trên trình duyệt
+1.  Routing: Định tuyến
+2.  Controller: Trung tâm điều khiển xử lý
+3.  Model: Phụ trách làm việc với database
+4.  View: Thiết lập trang hiển thị cho người dùng trên trình duyệt
 
 # MỘT SỐ FILE/THƯ MỤC QUAN TRỌNG LARAVEL
 
@@ -30,15 +30,15 @@
 
 # TÁC VỤ LIÊN QUAN ĐẾN CONTROLLER
 
--   Tạo controller bằng mã lệnh // php artisan make:controller NameController ; có sẵn các function: php artisan make:controller DrinkController --resource
--   Gọi controller từ route
--   Gọi controller có tham số từ url
--   Gọi view trong controller
--   Gửi dữ liệu sang view từ controller
--   Làm việc với Model
+1.  Tạo controller bằng mã lệnh // php artisan make:controller NameController ; có sẵn các function: php artisan make:controller DrinkController --resource
+2.  Gọi controller từ route
+3.  Gọi controller có tham số từ url
+4.  Gọi view trong controller
+5.  Gửi dữ liệu sang view từ controller
+6.  Làm việc với Model
     ...
 
--- Chuyển hướng trang: redirect('drink')
+-- Chuyển hướng trang: `redirect('drink')`
 
 # VIEWS LARAVEL
 
