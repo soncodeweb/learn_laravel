@@ -263,3 +263,455 @@ $number_posts = DB::table('posts')->count();
 ```
 
 ## PHƯƠNG THỨC WHERE LẤY DỮ LIỆU NHIỀU BẢNG QUERY BUILDER
+
+```php
+   $post = DB::table('posts')->where('user_id', 3)->get();
+   $post = DB::table('posts')->where('user_id', '>', 3)->get(); // >,<
+   $post = DB::table('posts')->where('title', 'like', "%iphone%")->get(); // like
+```
+
+## PHƯƠNG THỨC WHERE (KẾT HỢP) LẤY DỮ LIỆU NHIỀU BẢNG QUERY BUILDER
+
+```php
+// AND
+   $post = DB::table('posts')->where([
+      ['user_id', 3],
+      ['id',1]
+   ])->get();
+// OR
+   $post = DB::table('posts')->where(
+            'user_id',
+            3
+        )->orWhere('id', 1)->get();
+```
+
+## GROUP BY - QUERY BUILDER
+
+```php
+   $posts = DB::table('posts')->selectRaw('count(id) as number_post, user_id')->groupBy('user_id')->get();
+```
+
+## ORDER BY - QUERY BUILDER (Sắp xếp theo thứ tự nào đó)
+
+```php
+   $posts = DB::table('posts')->orderBy('user_id')->get(); // Sắp xếp tăng dần
+   $posts = DB::table('posts')->orderBy('user_id','desc')->get(); // Sắp xếp giảm dần
+```
+
+## LIMIT OFFSET - QUERY BUILDER (Lấy số lượng bản ghi nhất định)
+
+```php
+   $post = DB::table('posts')->limit(3)->get(); // lấy bản ghi giới hạn bằng 3
+
+      $post = DB::table('posts')->offset(2)->limit(3)->get(); // lấy bản ghi giới hạn bằng 3 loại 2 phần tử đầu tiên
+```
+
+## UPDATE - QUERY BUILDER
+
+```php
+
+   DB::table('posts')->where('id', 2)->update([
+      'title' => 'Update Laravel'
+   ])
+
+```
+
+## BÀI TẬP QUERY BUILDER
+
+Sử dụng query builder thực hiện các tác vụ module product
+
+-   Thêm sản phẩm
+-   Select sản phẩm
+-   Cập nhật sản phẩm
+-   Xóa sản phẩm
+    Tất cả thực hiện trên ProductController
+
+# ELOQUENT ORM
+
+Lấy dữ liệu bản ghi
+Query Builder: $posts = DB::table('posts')->get();
+Eloquent ORM: $posts = App/Post::all()
+
+Select, Insert, Update, Delete, Where
+
+## TẠO MODEL - ELOQUENT ORM
+
+_Cú pháp_
+C1: `php artisan make:model Post`
+C2: `php artisan make:model Post -m` // Tạo cả model và migration
+
+1. SELECT
+   Cú pháp: `Post::all()`
+
+    EX:
+
+    ```php
+        $post = Post::all();
+         return $post;
+    ```
+
+2. SELECT + WHERE
+   Cú pháp: `Post::where('user_id', 3)->get()`
+   EX:
+    ```php
+        $post = Post::where('user_id', 3)->get();
+        return $post;
+    ```
+3. SELECT FIRST
+   Cú pháp: `Post::where('user_id', 3)->first()`
+   EX:
+    ```php
+        $post = Post::where('user_id', 3)->first();
+        return $post;
+    ```
+4. FIND
+   Cú pháp: `Post::find(2)`
+   EX:
+    ```php
+        $post = Post::find(2);
+        return $post;
+    ```
+5. FIND LIST
+   Cú pháp: `Post::find([1,2])`
+   EX:
+    ```php
+        $posts = Post::find([1,2]);
+        return $posts;
+    ```
+6. ORDER BY
+   Cú pháp: `Post::orderBy('user_id')->get()` // tăng dần
+   Cú pháp: `Post::orderBy('user_id', 'desc')->get()` // giảm dần
+   EX:
+    ```php
+        $posts = Post::orderBy('user_id');
+        return $posts;
+    ```
+7. GROUP BY
+   Cú pháp: `Post::selectRaw("count('id') as number_posts, user_id")->groupBy('user_id')->orderBy('number_posts', 'desc')->get()`
+
+    EX:
+
+    ```php
+        $posts = Post::selectRaw("count('id') as number_posts, user_id")->groupBy('user_id')->orderBy('number_posts', 'desc')->get();
+        return $posts;
+    ```
+
+8. LIMIT OFFSET
+   Cú pháp: `Post::limit(2)->get()` // Lấy giới hạn 2 bản ghi
+   Cú pháp: `Post::limit(2)->offset(2)->get()` // Lấy giới hạn 2 bản ghi và loại bỏ 2 bản ghi đầu tiên
+
+    EX:
+
+    ```php
+        $posts = Post::limit(2)->get();
+        return $posts;
+    ```
+
+9. INSERT_SAVE
+   Cú pháp: `$post->save()`
+
+    EX:
+
+    ```php
+        $post = new Post;
+        $post->title = 'NodeJs';
+        $post->content = 'content NodeJs ,...';
+        $post->user_id = 1;
+
+        $post->save();
+    ```
+
+10. UPDATE_SAVE
+    Cú pháp: `$post->save()`
+
+    EX:
+
+    ```php
+        $post = Post::find($id);
+        $post->title = 'NodeJs Update';
+        $post->content = 'content NodeJs Update ,...';
+        $post->save();
+    ```
+
+11. INSERT_CREATE
+    Cú pháp:
+
+```php
+   Post::create([
+      'title'=>'Create',
+      'content'=>'Content create',
+      'user_id'=>3
+   ])
+```
+
+12. UPDATE
+    Cú pháp:
+
+```php
+   $post = Post::where('id', $id)->update([
+         'title' => 'UPDATE',
+         'content' => 'CONTENT UPDATE',
+         'user_id' => 3
+      ]);
+```
+
+13. DELETE
+    Cú pháp:
+
+```php
+  $post = Post::find($id)->delete();
+```
+
+14. DELETE - WHERE
+    Cú pháp:
+
+```php
+   $post = Post::where('user_id', $id)->delete();
+```
+
+15. DESTROY
+    Cú pháp:
+
+```php
+    Post::destroy(1); // Xóa bản ghi theo id
+    Post::destroy(16,17); // C1:Xóa danh sách bản ghi theo id và trả về số lượng bản ghi được xóa
+    Post::destroy([16,17]); //  C2:Xóa danh sách bản ghi theo id và trả về số lượng bản ghi được xóa
+```
+
+## SOFT DELETE CONFIG
+
+    Lợi ích:
+
+    -   Xóa dữ liệu tạm thời cho vào thùng rác tránh xóa nhầm
+    -   Có thể khôi phục lại dữ liệu đã xóa trước đó
+    -   Xuất danh sách bản ghi bao gồm đã xóa tạm thời
+    -   Hỗ trợ chương trình xóa vĩnh viển
+
+    Cấu hình:
+
+    -   Bước 1: Tạo CSDL softdelete qua migration
+    -   Bước 2: Khai báo sortdelete tạo Model
+
+1. SOFTDELETE_TRASH
+
+    - Dùng những cách xóa thông thường, nó chỉ xóa tạm thời và thêm thời gian vào `deleted_at`
+
+2. SOFTDELETE_SELECT
+   TH1: Lấy danh sách bản ghi chưa được xóa tạm thời
+
+    ```php
+        $posts = Post::withoutTrashed()->get();
+        return $posts;
+    ```
+
+    TH2: Lấy toàn bộ danh sách bản ghi
+
+    ```php
+        $posts = Post::withTrashed()->get();
+        return $posts;
+    ```
+
+    TH3: Lấy danh sách bản ghi đã được xóa tạm thời
+
+    ```php
+        $posts = Post::onlyTrashed()->get();
+        return $posts;
+    ```
+
+3. SOFTDELETE_RESTORE
+
+    ```php
+    $post = Post::onlyTrashed()->where('id', $id)->restore();
+    ```
+
+4. SOFTDELETE_FORCEDELETE // xóa vĩnh viễn bản ghi
+
+    ```php
+    Post::onlyTrashed()->where('id', $id)->forceDelete()
+    ```
+
+## RELATIONSHIP
+
+-   One To One
+-   One To Many
+-   Many To Many
+
+1.  ONE TO ONE
+    _CẤU HÌNH_: Tạo mối quan hệ ONE TO ONE giữa bảng `Post` và `FeaturedImages`
+
+    -   Model `Post`:
+
+    ```php
+    function FeaturedImages()
+          {
+                return $this->hasOne('App\Models\FeaturedImages');
+          }
+    ```
+
+    -   Model `FeaturedImages`:
+
+    ```php
+    function post()
+          {
+             return $this->belongsTo('App\Models\Post');
+          }
+    ```
+
+    _SELECT_:
+
+    -   Lấy thông tin bản `Post` thông qua bản `FeaturedImages`
+        ```php
+            $post = FeaturedImages::find($id)->post;
+            return $post;
+        ```
+    -   Lấy thông tin bản `FeaturedImages` thông qua bản `Post`
+        ```php
+            $img = Post::find(4)->FeaturedImages;
+            return $img;
+        ```
+
+2.  ONE TO MANY
+    _CẤU HÌNH_: Tạo mối quan hệ ONE TO MANY giữa bảng `Users` và `Posts`
+
+    -   Model `User`:
+
+    ```php
+    function post()
+          {
+                return $this->hasMany('App\Models\Post');
+          }
+    ```
+
+    -   Model `Post`:
+
+    ```php
+    function user()
+          {
+             return $this->belongsTo('App\Models\User');
+          }
+    ```
+
+    _SELECT_:
+
+    -   Lấy thông tin bản `User` thông qua model `Post`
+        ```php
+            $user = Post::find($id)->user;
+            return $user;
+        ```
+    -   Lấy thông tin bản `Post` thông qua model `User`
+        ```php
+            $posts = User::find($id)->posts;
+            return $posts;
+        ```
+
+3.  MANY TO MANY
+    _CẤU HÌNH_: Tạo mối quan hệ MANY TO MANY giữa bảng `Roles` và `User`
+
+    -   Model `User`:
+
+    ```php
+    function roles()
+          {
+                return $this->belongsToMany('App\Models\Role');
+          }
+    ```
+
+    -   Model `Role`:
+
+    ```php
+    function users()
+          {
+             return $this->belongsTo('App\Models\User');
+          }
+    ```
+
+    _SELECT_:
+
+    -   Lấy thông tin bản `User` thông qua model `Post`
+        ```php
+            $user = Post::find($id)->user;
+            return $user;
+        ```
+    -   Lấy thông tin bản `Post` thông qua model `User`
+        ```php
+            $posts = User::find($id)->posts;
+            return $posts;
+        ```
+
+# FORM - VALIDATION FORM
+
+-   Các phần tử form phổ biến + input text + label + textarea + input email + input password + input number + input date + checkbox, radiobox + selectbox + submit + button
+    _Vị trí xây dựng form: Views_
+
+## FORM BASIC, BOOTSTRAP AND LARAVELCOLLECTIVE
+
+## VALIDATION
+
+Là thao tác chuẩn hóa dữ liệu form trước khi bước vào xử lý những giai đoạn tiếp theo của dự án. Nó được coi là bộ lọc và đảm bảo nhận được dữ liệu theo định dạng mong muốn. - Kiểm tra dữ liệu rỗng - Kiểm tra độ dài dữ liệu - Kiểm tra định dạng theo biểu thức chính quy - Kiểm tra dữ liệu trùng
+
+1. Validate
+
+```php
+       $request->validate(
+            [
+                'title' => 'required',
+                'content' => 'required'
+            ]
+        );
+```
+
+2. Validate showerror
+
+```php
+   Kiểm tra xem có bất kì lỗi nào hay không
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    Danh sách các lỗi
+                    @foreach ($errors->all() as $error)
+                        <li>{{$error}}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+```
+
+3. Validate error field
+
+```php
+    @error('content')
+        <small class="form-text text-danger">{{$message}}</small>
+    @enderror
+```
+
+4. Validate custom error
+
+```php
+    $request->validate(
+            [
+                'title' => 'required',
+                'content' => 'required'
+            ],
+            [
+                'required' => ':attribute không được để trống!'
+            ],
+            [
+                'title' => 'tiêu đề',
+                'content' => 'nội dung'
+            ]
+        ); // dữ liệu phải tồn tại
+```
+
+5. Validate Rules
+   _Quy tắc_-----------------------------------_Chú thích_
+   `required` --------------------------------Không được để trống dữ liệu
+   `email` -----------------------------------Yêu cầu nhập theo định dạng email 'user_email' => 'email'.
+   `integer` ---------------------------------Dữ liệu nhập số nguyên 'price'=>'interger'
+   `confirmed` -------------------------------Kiểm tra dữ liệu trùng nhau (mật khẩu) 're_password' =>'password_confirmation'
+   `max:value` -------------------------------Độ dài lớn nhất dữ liệu nhập vào, 'title' => 'max:100'
+   `min:value` -------------------------------Độ dài bé nhất dữ liệu nhập vào, 'title' => 'min:3'
+   `unique:table` ----------------------------Dữ liệu nhập vào phải duy nhất trong bảng, 'username' => 'unique:users'
+   `int:a,b` ---------------------------------Dữ liệu nhập vào nằm trong danh sách a,b, 'status' =>'in:publish,private'
+   `regex` -----------------------------------Dữ liệu nhập vào theo định dạnh biểu thức chính quy, 'username' => 'regex:/^([a-zA-Z]+)S/'
+   `file` ------------------------------------Dữ liệu nhập vào dạng file
+   `image` -----------------------------------Dữ liệu nhập vào phải là file ảnh (jpeg, png, bmp, gif,...)
